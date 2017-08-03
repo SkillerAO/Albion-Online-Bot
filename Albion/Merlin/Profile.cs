@@ -64,7 +64,7 @@ namespace Merlin
 	    void Start()
 	    {
             OnStart();
-
+                
         }
 
 	    void Stop()
@@ -86,6 +86,13 @@ namespace Merlin
 		/// </summary>
 		void Update()
 		{
+		    if (_client.State == GameState.Playing)
+		    {
+		        Client.Zoom = 130f;
+		        Client.GlobalFog = false;
+		    }
+                
+
             if (DateTime.Now < _nextUpdate)
 				return;
 
