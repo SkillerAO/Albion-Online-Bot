@@ -1,12 +1,4 @@
-﻿
-
-
-
-
-
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -53,6 +45,54 @@ namespace Merlin.API
 		public Collision Collision => _collision;
 
 		public Cluster CurrentCluster => new Cluster(_world.CurrentCluster.Info);
+
+	    public static float Zoom
+        {
+            get
+            {
+                LocalActorCameraController localActorCameraController = GameObject.FindObjectsOfType<LocalActorCameraController>().FirstOrDefault<LocalActorCameraController>();
+                if (localActorCameraController == null)
+                {
+                    return 0f;
+                }
+                return localActorCameraController.Outside.Far.Distance;
+            }
+            set
+            {
+                LocalActorCameraController localActorCameraController = GameObject.FindObjectsOfType<LocalActorCameraController>().FirstOrDefault<LocalActorCameraController>();
+                if (localActorCameraController == null)
+                {
+                    return;
+                }
+                localActorCameraController.Outside.Far.Distance = value;
+            }
+        }
+
+		public static bool GlobalFog
+        {
+            get
+            {
+
+                GlobalFog component = Camera.main.GetComponent<GlobalFog>();
+                return !(component == null) && (bool)component.GetType().InvokeMember("a", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField, Type.DefaultBinder, component, null);
+            }
+            set
+            {
+                GlobalFog component = Camera.main.GetComponent<GlobalFog>();
+                if (component == null)
+                {
+                    return;
+                }
+                component.GetType().InvokeMember("a", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.SetField, Type.DefaultBinder, component, new object[]
+                {
+                    value
+                });
+                component.GetType().InvokeMember("b", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.SetField, Type.DefaultBinder, component, new object[]
+                {
+                    value
+                });
+            }
+        }
 
 		#endregion
 
